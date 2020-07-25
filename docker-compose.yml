@@ -77,8 +77,8 @@ services:
     environment:
       - MTP_RELAY=smtp.gmail.com
       - MTP_PORT=587
-      - MTP_USER=lakhan36899@gmail.com
-      - MTP_PASS=Lakhan@362
+      - MTP_USER=*********
+      - MTP_PASS=*********
       - MTP_HOST=smtp.gmail.com
     ports:
       - "587:587"
