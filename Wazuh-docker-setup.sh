@@ -1,7 +1,58 @@
 #!/bin/bash
+
+#Check if input is Provided or Not
+
+if [ -z "$1" ]
+  then
+    printf "\nNumber of Wazuh-Worker needed : \n\n" ; exit 1 
+fi
+
+#Number of worker check
+re='^[0-99]+$'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Pass a valid number" >&2; exit 1
+fi
+
+#Check if email is provided or not
+if [ -z "$2" ]
+  then
+    printf "\nEmail is not provided : \n\n"; exit 1
+fi
+
+#Email Validity
+if echo "$2" | grep '^[a-zA-Z0-9]*@[a-zA-Z0-9]*\.[a-zA-Z0-9]*$' >/dev/null; then
+    printf  "\nValid email.\n\n"
+else
+    echo "Email invalid"; exit 1
+fi
+
+#Check if email is provided or not
+if [ -z "$3" ]
+  then
+    printf "\nPassword is not provided : \n\n"; exit 1
+fi
+
+#Input values
+echo "Number of Worker node : $1"
+echo "Email Address : $2"
+echo "Password : $3"
+
+
+
+printf  "\n\n*******Input Validation completed.***********\n\n"
+printf  "\n\n*******Docker and Docker-Compose installation started.***********\n\n"
+
+
+#Adding email and password in docker-compose.yml file
+Email=$2
+Password=$3
+sed -i -e ";s#<Email-Id>#${Email::-1}#g" docker-compose.yml
+sed -i -e ";s#<Password>#${Password::-1}#g" docker-compose.yml
+
+#Docker installation process begin
+
 apt-get update &&apt-get upgrade -y
 
-#Docker installation 
 sudo apt-get remove docker docker-engine docker.io containerd runc -y
 
 sudo apt-get update
@@ -33,6 +84,12 @@ docker-compose --version
 sysctl -w vm.max_map_count=262144
 
 
+printf  "\n\n*******Docker and Docker-Compose installation completed.***********\n\n"
+
+
+printf  "\n\n*******Starting Wazuh installation.***********\n\n"
+
+
 function clean_up {
     # Perform program exit housekeeping
     kill $CHILD_PID
@@ -60,10 +117,8 @@ MASTER_IP=$(docker-compose exec wazuh hostname -i)
 sed -i -e ";s#<WAZUH-MASTER-IP>#${MASTER_IP::-1}#g" nginx.conf
 
 for i in $(seq 1 $1)
-
 do
     WORKER_IP=$(docker-compose exec --index=$i wazuh-worker hostname -i)
-    
     sed -i -e ";s#NEXT_SERVER#server ${WORKER_IP::-1}:1514;\n\tNEXT_SERVER#g" nginx.conf
 done
 
@@ -74,4 +129,3 @@ echo ";Running load-balancer service";
 docker-compose up load-balancer > load-balancer.logs 
 
 wait $CHILD_PID
-
