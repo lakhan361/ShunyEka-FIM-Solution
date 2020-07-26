@@ -4,7 +4,7 @@
 
 if [ -z "$1" ]
   then
-    printf "\nNumber of Wazuh-Worker needed : \n\n" ; exit 1 
+    printf "\n\nNumber of Wazuh-Worker needed : \n\n" ; exit 1 
 fi
 
 #Number of worker check
@@ -21,7 +21,7 @@ fi
 
 #Email Validity
 if echo "$2" | grep '^[a-zA-Z0-9]*@[a-zA-Z0-9]*\.[a-zA-Z0-9]*$' >/dev/null; then
-    printf  "\nValid email.\n\n"
+    printf  "\n\nValid email.\n\n" > /dev/null 2>&1
 else
     echo "Email invalid"; exit 1
 fi
@@ -32,16 +32,22 @@ if [ -z "$3" ]
     printf "\nPassword is not provided : \n\n"; exit 1
 fi
 
+
+ printf "\n"
+
+
 #Input values
 echo "Number of Worker node : $1"
 echo "Email Address : $2"
 echo "Password : $3"
 
 
-
+sleep 3
 printf  "\n\n*******Input Validation completed.***********\n\n"
-printf  "\n\n*******Docker and Docker-Compose installation started.***********\n\n"
 
+sleep 3
+printf  "\n\n*******Docker and Docker-Compose installation started.***********\n\n"
+sleep 3
 
 #Adding email and password in docker-compose.yml file
 Email=$2
@@ -66,29 +72,30 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
-
-echo "/n/n********Docker installation Completed********/n/n"
-
+sleep 3
+printf  "\n\n********Docker installation Completed********\n\n"
+sleep 3
 docker version
-
-echo "/n/n********Docker-Compose installation********/n/n"
+sleep 3
+printf "\n\n********Docker-Compose installation********\n\n"
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 sudo chmod +x /usr/local/bin/docker-compose
 
+printf "\n\n"
 docker-compose --version
 
 #Increase max_map_count on your Docker host:
 
 sysctl -w vm.max_map_count=262144
-
+sleep 3
 
 printf  "\n\n*******Docker and Docker-Compose installation completed.***********\n\n"
 
-
+sleep 3
 printf  "\n\n*******Starting Wazuh installation.***********\n\n"
-
+sleep 3
 
 function clean_up {
     # Perform program exit housekeeping
@@ -106,11 +113,13 @@ docker-compose up --scale wazuh-worker=$1 --scale load-balancer=0 > services.log
 
 CHILD_PID=$!
 
-echo ";Waiting for services start.";
+echo "Waiting for services start.";
 
 sleep 10
 
-echo ";Creating load-balancer configuration";
+printf "\n\nCreating load-balancer configuration\n\n";
+
+sleep 18
 
 MASTER_IP=$(docker-compose exec wazuh hostname -i)
 
@@ -124,8 +133,9 @@ done
 
 sed -i -e ";s#NEXT_SERVER##g" nginx.conf
 
-echo ";Running load-balancer service";
+printf "\n\nRunning load-balancer service\n\n";
 
-docker-compose up load-balancer > load-balancer.logs 
+docker-compose up load-balancer > load-balancer.logs &
 
-wait $CHILD_PID
+sleep 10
+printf "\n\nScript completed\n\n"; 
