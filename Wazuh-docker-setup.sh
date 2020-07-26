@@ -49,7 +49,7 @@ sleep 3
 printf  "\n\n*******Docker and Docker-Compose installation started.***********\n\n"
 sleep 3
 
-#Adding email and password in docker-compose.yml file
+#Adding email and password in docker-compose.yml file setted up for gmail 
 Email=$2
 Password=$3
 sed -i -e ";s#<Email-Id>#${Email::-1}#g" docker-compose.yml
@@ -96,6 +96,15 @@ printf  "\n\n*******Docker and Docker-Compose installation completed.***********
 sleep 3
 printf  "\n\n*******Starting Wazuh installation.***********\n\n"
 sleep 3
+
+#Pulling the specific dockerimages images 
+docker  pull wazuh/wazuh:3.13.1_7.8.0
+docker  pull wazuh/wazuh-elasticsearch:3.13.1_7.8.0
+docker  pull wazuh/wazuh-kibana:3.13.1_7.8.0
+docker  pull wazuh/wazuh-nginx:3.13.1_7.8.0
+docker  pull eeacms/postfix:2.10-3.5
+docker  pull nginx
+
 
 function clean_up {
     # Perform program exit housekeeping
