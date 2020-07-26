@@ -1,22 +1,13 @@
 Wazuh containers for Docker-compose
-
 In this repository you will find the containers to run:
 
-wazuh-manager: It runs the Wazuh manager, Wazuh API and Filebeat (for integration with Elastic Stack).
-
-Wazuh-worker: we will use Docker Compose to create various instances of one service: wazuh-worker, based on the default wazuh-manager service, which will be used as a master node in our cluster.
-
-wazuh-kibana: Provides a web user interface to browse through alerts data. It includes Wazuh plugin for Kibana, that allows you to visualize agents configuration and status.
-
-wazuh-nginx: Proxies the Kibana container, adding HTTPS (via self-signed SSL certificate) and Basic authentication.
-
-wazuh-elasticsearch: An Elasticsearch container (working as a single-node cluster) using Elastic Stack Docker images. Be aware to increase the vm.max_map_count setting, as it's detailed in the Wazuh documentation.
-
-wazuh-loadbalancer: In our cluster documentation, Nginx could be a perfect tool to do load balancing.
-
-Wazuh-Postfix: Sending email notification.
-
-Elasticsearch cluster. In the Elasticsearch Dockerfile we can visualize variables to configure an Elasticsearch Cluster. These variables are used in the file config_cluster.sh to set them in the elasticsearch.yml configuration file. You can see the meaning of the node variables here and other cluster settings here.
+1). wazuh-manager: It runs the Wazuh manager, Wazuh API and Filebeat (for integration with Elastic Stack).
+2). Wazuh-worker: we will use Docker Compose to create various instances of one service: wazuh-worker, based on the default wazuh-manager service, which will be used as a master node in our cluster.
+3). Wazuh-kibana: Provides a web user interface to browse through alerts data. It includes Wazuh plugin for Kibana, that allows you to visualize agents configuration and status.
+4). Wazuh-nginx: Proxies the Kibana container, adding HTTPS (via self-signed SSL certificate) and Basic authentication.
+5). Wazuh-elasticsearch: An Elasticsearch container (working as a single-node cluster) using Elastic Stack Docker images. Be aware to increase the vm.max_map_count setting, as it's detailed in the Wazuh documentation.
+6). Wazuh-loadbalancer: In our cluster documentation, Nginx could be a perfect tool to do load balancing.
+7). Wazuh-Postfix: Sending email notification.
 
 
 # Wazuh-Docker-Compose
