@@ -148,3 +148,5 @@ docker-compose up load-balancer > load-balancer.logs &
 
 sleep 10
 printf "\n\nScript completed\n\n"; 
+
+printf "\n\n******Check the url <http://master-ip> in your browser*****<\n\n"; 
